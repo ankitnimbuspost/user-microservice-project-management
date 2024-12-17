@@ -2,6 +2,7 @@ const SocketIo = require("socket.io");
 const Middleware = require("../middleware/socket.middleware");
 const ChatHelper = require("./ChatHelper");
 const { decode } = require("jsonwebtoken");
+const UserSettings = require("../models/users.settings.model");
 
 
 
@@ -27,8 +28,12 @@ function initUserSocket(server) {
 
             ChatHelper.savePrivateMessage(socket.decoded.id, request).then((data) => {
                 const sender_socket_id = users[request.send_to];
+                // Send Message to Current User 
+                const current_user_socket_id = users[socket.decoded.id];
+                io.to(current_user_socket_id).emit('private_message', { response: data });
+                console.log(current_user_socket_id,sender_socket_id)
                 if (sender_socket_id) {
-                    // Send Message to Specific Socket User
+                    // Send Message to Receiver Socket User
                     io.to(sender_socket_id).emit('private_message', { response: data });
                 }
                 else
@@ -47,7 +52,6 @@ function initUserSocket(server) {
             await ChatHelper.seenPrivateMessage(socket.decoded.id, request.sender_id);
             if (sender_socket_id) {
                 let messageLists = await ChatHelper.getPrivateMessageList(socket.decoded.id, request.sender_id);
-                console.log(messageLists);
                 io.to(sender_socket_id).emit('private_message_list', { "messages": messageLists });
             }
         });
@@ -61,7 +65,7 @@ function initUserSocket(server) {
             const sender_socket_id = users[socket.decoded.id];
             if (sender_socket_id) {
                 let messageLists = await ChatHelper.getPrivateMessageList(socket.decoded.id, request.sender_id);
-                console.log(messageLists)
+                // console.log(messageLists)
                 // io.to(sender_socket_id).emit('private_message_list', { "messages": messageLists });
                 socket.emit('private_message_list', { "messages": messageLists });
             }
@@ -74,6 +78,10 @@ function initUserSocket(server) {
             try {
                 console.log(request)
                 let details = await ChatHelper.getUserGroupDetails(request.id, request.type);
+                let data = {last_used_user:{"type":type.toLowerCase(),"id":request.id}};
+                UserSettings.updateSetting(socket.decoded.id,data).then(data).catch((err)=>{
+                    console.log(err.message);
+                });
                 socket.emit('get_to_data', { "data": details });
             } catch (error) {
                 console.error(error.message);
@@ -93,7 +101,7 @@ function initUserSocket(server) {
         let userData = await ChatHelper.getDirectMessageUser(socket.decoded.id);
         io.emit("getDirectMessageUser", { "data": userData });
         let userGroups = await ChatHelper.getUserGroups(socket.decoded.id);
-        console.log(userGroups)
+        // console.log(userGroups)
         io.emit("getUserGroups", { "data": userGroups });
 
         //----------------------End ----------------------------------------------/

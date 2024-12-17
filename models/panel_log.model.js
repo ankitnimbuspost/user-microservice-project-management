@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const {LOG_TYPE} = require("../config/data.config");
 const _ = require('lodash');
+const { Helper } = require('../helper/common-helper');
 
 
 const logSchema = mongoose.Schema({
@@ -34,8 +35,8 @@ const logSchema = mongoose.Schema({
 });
 
 logSchema.statics.createLog = async function(data){
-    const doc1 = data.prev_data;
-    const doc2 = data.current_data;
+    const doc1 = await Helper.formatLogData(data.prev_data);
+    const doc2 = await Helper.formatLogData(data.current_data);
     try {
         const differences = _.reduce(doc1, (result, value, key) => {
             if (!_.isEqual(value, doc2[key])) {

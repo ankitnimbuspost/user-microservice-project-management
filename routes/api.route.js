@@ -23,5 +23,6 @@ route.post('/update-password',AuthController.updatePassword);
 route.post("/share-invitation",UserController.shareInvitation);
 route.post("/upload-files",KycController.uploadFiles);
 route.post("/micro1-request-internal",TestController.microRequestHandle)
+route.post("/set-direct-user-message",UserController.setDirectMessageUser)
 
 module.exports = route;

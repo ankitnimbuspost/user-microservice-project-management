@@ -17,6 +17,7 @@ module.exports.company_types = [
 module.exports.LOG_TYPE = [
     'PROFILE_UPDATE',
     'COMPANY_DETAILS_UPDATE',
+    'USER_SETTING_UPDATE',
     'OTHER'
 ];
 module.exports.OTP_EXPIRE_TIME = 10;
