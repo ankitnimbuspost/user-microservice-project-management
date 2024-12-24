@@ -40,7 +40,8 @@ const messageSchema = mongoose.Schema({
     message_type:{
         type:String,
         required:true,
-        enum:['text','image','zip','pdf','url']
+        default :""
+        // enum:['text','image','zip','pdf','url']
     },
     message:{
         type:String,

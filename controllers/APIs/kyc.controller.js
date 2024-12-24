@@ -63,25 +63,26 @@ module.exports.uploadFiles = async function (req, res) {
             const uploadPath = path.join(uploadsDir, newFileName);
             let file_full_path = `${process.env.BACKEND_ADDRESS}/uploads/chat_files/${newFileName}`;
             file.mv(uploadPath);
-            return file_full_path;
+            const fileExtension = path.extname(file.name);
+            return {"url":file_full_path,"ext":fileExtension.replace(".","")};
         }
         let files = req.files['files'];
         let filesURL = [];
         if (Array.isArray(files)) {
-            if(files.length<=10){
+            if(files.length<=20){
                 // We gusse multiple file 
                 await files.forEach(async(file) => {
                     let file_url = await uploadSingalFile(file);
-                    filesURL.push({ 'url': file_url });
+                    filesURL.push(file_url );
                 });
             }
             else
-                return res.status(httpCode.BAD_REQUEST).json({ code: httpCode.BAD_REQUEST, "message": "Maximum file upload limit exceed, Only 10 files upload at a time." });
+                return res.status(httpCode.BAD_REQUEST).json({ code: httpCode.BAD_REQUEST, "message": "Maximum file upload limit exceed, Only 20 files upload at a time." });
         }
         else {
             // We gusse singal file 
             let file_url = await uploadSingalFile(files);
-            filesURL.push({ 'url': file_url });
+            filesURL.push(file_url);
         }
         return res.status(httpCode.OK).json({ code: httpCode.OK, "message": "File Uploaded Successfully",data:filesURL});
     }

@@ -78,7 +78,7 @@ function initUserSocket(server) {
             try {
                 console.log(request)
                 let details = await ChatHelper.getUserGroupDetails(request.id, request.type);
-                let data = {last_used_user:{"type":type.toLowerCase(),"id":request.id}};
+                let data = {last_used_user:{"type":request.type.toLowerCase(),"id":request.id}};
                 UserSettings.updateSetting(socket.decoded.id,data).then(data).catch((err)=>{
                     console.log(err.message);
                 });
