@@ -19,6 +19,12 @@ initUserSocket(server)
 app.use(cors());
 app.use(fileUpload());
 app.use(express.json({ limit: '50mb' }));
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+  res.header("Access-Control-Allow-Methods", "GET, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type");
+  next();
+});
 
 // Serve static files (e.g., index.html)
 app.use(express.static(__dirname + '/public'));

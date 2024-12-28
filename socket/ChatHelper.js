@@ -86,9 +86,11 @@ module.exports.getMyUserContacts = async function (user_id) {
 }
 
 module.exports.getDirectMessageUser = async function (user_id) {
-    // let users_ids = await UserSettings.findOne({ user_id: user_id }).select({ "users_contacts": 1 });
-    let users = await UsersModel.find().select({ "_id": 1, 'f_name': 1, l_name: 1, 'profile_image': 1, 'socket_id': 1 });
-    return users;
+    let setting = await UserSettings.findOne({ user_id: user_id }).select({ "users_contacts": 1 });
+    if(setting)
+        return  await UsersModel.find({_id:{"$in":setting.users_contacts}})
+        .select({ "_id": 1, 'f_name': 1, l_name: 1, 'profile_image': 1, 'socket_id': 1 });
+    return [];
 }
 
 module.exports.getUserGroupDetails = async function(id,type){

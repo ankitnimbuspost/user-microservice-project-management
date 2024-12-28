@@ -8,6 +8,7 @@ module.exports.authenticateUsers = async function (socket, next) {
                 return next(new Error('Authentication error'));
             }
             socket.decoded = decoded;
+            socket.id=decoded.id;
             next();
         });
     } else {

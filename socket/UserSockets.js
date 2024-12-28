@@ -31,13 +31,10 @@ function initUserSocket(server) {
                 // Send Message to Current User 
                 const current_user_socket_id = users[socket.decoded.id];
                 io.to(current_user_socket_id).emit('private_message', { response: data });
-                console.log(current_user_socket_id,sender_socket_id)
                 if (sender_socket_id) {
                     // Send Message to Receiver Socket User
                     io.to(sender_socket_id).emit('private_message', { response: data });
                 }
-                else
-                    console.log("Receiver User Not Connected ", request.send_to);
             }).catch((error) => { console.log(error) });
 
         });
@@ -46,7 +43,6 @@ function initUserSocket(server) {
 
         //*********************Message Seen Events********************** 
         socket.on('private_message_seen', async (request) => {
-            console.log('private_message_seen')
             //Here Seen Message:- receiver_id = > current_user_id & sender_id=>who is send message to you
             const sender_socket_id = users[request.sender_id];
             await ChatHelper.seenPrivateMessage(socket.decoded.id, request.sender_id);
@@ -59,7 +55,6 @@ function initUserSocket(server) {
 
         //************************Private Message Listing************************ */
         socket.on('private_message_list', async (request) => {
-            console.log(request)
             //Sender ID like target id (Kinka Message dekhna hai apne session se)
             //Here Seen Message:- receiver_id = > current_user_id & sender_id=>who is send message to you
             const sender_socket_id = users[socket.decoded.id];
@@ -76,7 +71,6 @@ function initUserSocket(server) {
         socket.on('get_to_data', async (request) => {
             // Request Eg: {id:"1223322","type":"user"}
             try {
-                console.log(request)
                 let details = await ChatHelper.getUserGroupDetails(request.id, request.type);
                 let data = {last_used_user:{"type":request.type.toLowerCase(),"id":request.id}};
                 UserSettings.updateSetting(socket.decoded.id,data).then(data).catch((err)=>{
