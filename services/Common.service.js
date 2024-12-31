@@ -165,7 +165,7 @@ function sendInvitationMail(user,receiver_mail){
                                                                     <td>
                                                                         <div style="display: flex; margin-top: 24px;">
                                                                             <a
-                                                                                href="${process.env.FRONTEND_URL}/signin?ref=${user._id}"
+                                                                                href="${process.env.FRONTEND_URL}/signup?ref=${user._id}"
                                                                                 style="
                                                                                     box-sizing: border-box;
                                                                                     border-radius: 3px;

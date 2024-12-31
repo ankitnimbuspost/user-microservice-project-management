@@ -35,6 +35,10 @@ function initUserSocket(server) {
                     // Send Message to Receiver Socket User
                     io.to(sender_socket_id).emit('private_message', { response: data });
                 }
+                // Now Update User Setting (Update Latest User & contacts)
+                ChatHelper.updateLatestUser(request.send_to,socket.decoded.id,"user").then().catch((err)=>{
+                    console.log(err.message);
+                });
             }).catch((error) => { console.log(error) });
 
         });
@@ -60,7 +64,6 @@ function initUserSocket(server) {
             const sender_socket_id = users[socket.decoded.id];
             if (sender_socket_id) {
                 let messageLists = await ChatHelper.getPrivateMessageList(socket.decoded.id, request.sender_id);
-                // console.log(messageLists)
                 // io.to(sender_socket_id).emit('private_message_list', { "messages": messageLists });
                 socket.emit('private_message_list', { "messages": messageLists });
             }
@@ -72,8 +75,11 @@ function initUserSocket(server) {
             // Request Eg: {id:"1223322","type":"user"}
             try {
                 let details = await ChatHelper.getUserGroupDetails(request.id, request.type);
-                let data = {last_used_user:{"type":request.type.toLowerCase(),"id":request.id}};
-                UserSettings.updateSetting(socket.decoded.id,data).then(data).catch((err)=>{
+                ChatHelper.updateLatestUser(socket.decoded.id,request.id,request.type).then(async(data)=>{
+                    // Broadcast Direct User Data 
+                    let userData = await ChatHelper.getDirectMessageUser(socket.decoded.id);
+                    io.emit("getDirectMessageUser", { "data": userData });
+                }).catch((err)=>{
                     console.log(err.message);
                 });
                 socket.emit('get_to_data', { "data": details });

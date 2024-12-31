@@ -1,3 +1,4 @@
+const { default: mongoose } = require("mongoose");
 const Messages = require("../models/message.model");
 const UsersModel = require("../models/users.model");
 const UserSettings = require("../models/users.settings.model");
@@ -125,4 +126,27 @@ module.exports.getUserGroups = async function(user_id){
         },
     ];
     return groups;
+}
+module.exports.updateLatestUser = async function(current_user_id=null,to_user_id=null,type=null){
+    if(current_user_id==null || to_user_id==null || type==null)
+        return false;
+
+    // Now Update User Settings 
+    let setting = await UserSettings.findOne({user_id:current_user_id}).select({"users_contacts":1});
+    let last_used_user={"type":type.toLowerCase(),"id":to_user_id}
+    let data = {"users_contacts":to_user_id,last_used_user_group:last_used_user}
+    if(setting!=null){
+        try {
+            let check = await UserSettings.findOne({"last_used_user_group.id":to_user_id}).select({_id:1});
+            if(check)
+                return true;
+            let users_contacts = setting.users_contacts;
+            users_contacts.push(new mongoose.Types.ObjectId(to_user_id));
+            data.users_contacts = [...new Set(users_contacts.map(contact => contact.toString()))];
+        } catch (error) {
+            console.log(error.message);
+        }
+    }
+    await UserSettings.updateSetting(current_user_id,data);
+    return true;
 }
