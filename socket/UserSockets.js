@@ -69,6 +69,12 @@ function initUserSocket(server) {
             }
         });
         //********************************End********************** */
+        //************************Get Last Chat Message User/Group ************************ */
+        socket.on('last_chat', async () => {
+            const last_message_info = await ChatHelper.getLastMessage(socket.decoded.id);
+            socket.emit('last_chat', { "response": last_message_info });
+        });
+        //********************************End********************** */
 
         //************************User Group Details Listing************************ */
         socket.on('get_to_data', async (request) => {

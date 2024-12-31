@@ -150,3 +150,15 @@ module.exports.updateLatestUser = async function(current_user_id=null,to_user_id
     await UserSettings.updateSetting(current_user_id,data);
     return true;
 }
+
+module.exports.getLastMessage = async function(user_id){
+    if(!user_id)
+        return 0;
+    try {
+        const setting = await UserSettings.findOne({ user_id }).select("last_used_user_group");
+        return setting?.last_used_user_group || false;
+    } catch (error) {
+        console.error(`Error fetching user settings for user_id ${user_id}:`, error);
+        return false;
+    }
+}
