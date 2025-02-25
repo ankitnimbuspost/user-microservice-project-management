@@ -1,0 +1,8 @@
+1) User Upgrade Plan Logic
+    Personal Plan → ₹600 for 6 months (₹100/month → ₹3.33/day)
+    User used 3 months, so remaining balance = ₹300
+    Business Plan → ₹1200 for 6 months (₹200/month → ₹6.67/day)
+    User upgrades → Pays ₹1200 - ₹300 = ₹900
+    New expiration date = (₹900 ÷ ₹6.67/day) = 135 days (~4.5 months)
+
+

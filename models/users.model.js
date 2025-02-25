@@ -45,7 +45,8 @@ const userSchema = mongoose.Schema({
     company_id:{
         ref:"company_details",
         type : mongoose.Schema.Types.ObjectId,
-        default : ""
+        default : "",
+        index:true,
     },
     phone_verified:{
         type:Number,

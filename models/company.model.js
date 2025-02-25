@@ -42,6 +42,11 @@ const companySchema = mongoose.Schema({
         enum:[0,1,2], //Processing(0) Approve(1) Reject(2)
         default:0
     },
+    plan_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "plans",
+        required: false // optional
+    },
     created:{
         type:Number,
         default:Math.floor(Date.now()/1000)
@@ -55,14 +60,36 @@ const companySchema = mongoose.Schema({
 companySchema.statics.getNewTaskID = async function(user_id){
     try {
         let user = await UsersModel.findOne({_id:user_id}).select({"company_id":1});
+        await this.incrementTaskCount(user.company_id);
         let data = await this.findOne({_id:user.company_id});
-        let total = data.total_task + 1;
-        return data.company_code+total;
+        return data.company_code+data.total_task;
     } catch (error) {
         return false;
     }
 }
+companySchema.statics.incrementTaskCount = async function(company_id){
+    try {
+        let cmp = await this.findOne({_id:company_id});
+        cmp.total_task = cmp.total_task + 1;
+        await cmp.save();
+        return true;
+    } catch (error) {
+        console.log(error.message);
+        return false;
+    }
+}
+companySchema.statics.getPlanDetails = async function(company_id=false){
+    if(!plan_id)
+        return false;
 
+    try {
+        const company = await this.findOne({ plan_id: company_id }).populate("plan");
+        return company;
+    } catch (error) {
+        console.log(error.message);
+        return false;
+    }
+}
 const CompanyModel = mongoose.model("company_details",companySchema);
 
 module.exports = CompanyModel;

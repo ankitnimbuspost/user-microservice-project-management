@@ -15,11 +15,13 @@ route.post("/signin",AuthController.signin);
 route.get("/logout",AuthController.logout);
 route.get("/user",AuthController.userDetails);
 route.post("/update-profile",AuthController.updateUserProfile);
-route.get("/test",TestController.test);
-route.post("/user-company-wise",UserController.getUserCompanyWise);
-route.post('/update-company-details',KycController.addUpdateKyc);
 route.post('/forgot-password',AuthController.forgotPassword);
 route.post('/update-password',AuthController.updatePassword);
+
+route.get("/test",TestController.test);
+route.post("/user-company-wise",UserController.getUserCompanyWise);
+route.post("/create-update-pricing-plan",UserController.createUpdatePricingPlan)
+route.post('/update-company-details',KycController.addUpdateKyc);
 route.post("/share-invitation",UserController.shareInvitation);
 route.post("/upload-files",KycController.uploadFiles);
 route.post("/micro1-request-internal",TestController.microRequestHandle)
