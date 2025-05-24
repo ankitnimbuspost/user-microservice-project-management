@@ -2,7 +2,7 @@ const SocketIo = require("socket.io");
 const Middleware = require("../middleware/socket.middleware");
 const ChatHelper = require("./ChatHelper");
 const { decode } = require("jsonwebtoken");
-const UserSettings = require("../models/users.settings.model");
+const UserSettings = require("../models/userAPIs/users.settings.model");
 
 
 

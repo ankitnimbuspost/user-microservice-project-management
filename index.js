@@ -3,10 +3,10 @@ const http = require("http");
 require("dotenv").config();
 require("./config/database.config");
 require("./config/rabbitmq.config");
-const QueueController = require("./controllers/APIs/queue.controller")
+const QueueController = require("./controllers/userAPIs/queue.controller")
 const initUserSocket = require("./socket/UserSockets")
-const apiRoutes = require("./routes/api.route");
-const adminRoutes = require("./routes/admin.route");
+const apiRoutes = require("./routes/userAPIs/api.route");
+const adminRoutes = require("./routes/adminAPIs/admin.route");
 const app = express();
 const server = http.createServer(app);
 const cors = require('cors');

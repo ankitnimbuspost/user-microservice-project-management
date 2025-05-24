@@ -1,7 +1,7 @@
 const { default: mongoose } = require("mongoose");
-const Messages = require("../models/message.model");
-const UsersModel = require("../models/users.model");
-const UserSettings = require("../models/users.settings.model");
+const Messages = require("../models/userAPIs/message.model");
+const UsersModel = require("../models/userAPIs/users.model");
+const UserSettings = require("../models/userAPIs/users.settings.model");
 
 module.exports.setUserSession = function (user_id, socket_id) {
     return new Promise((resolve, reject) => {
